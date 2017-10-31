@@ -396,8 +396,10 @@ int mk_dirs(const char *dir) {
             tmp[i] = 0;
             if (access(tmp, 0) != 0) {
                 if (mkdir(tmp, 0755) == -1) {
-                    fprintf(stderr, "mk_dirs: tmp=%s\n", tmp);
-                    return -1;
+                  fprintf(stderr, "mk_dirs: tmp=%s %s %d\n", tmp, strerror(errno), errno);
+                  // continue when file exists
+                  if(errno == 17) continue;
+                  return -1;
                 }
             }
             tmp[i] = '/';

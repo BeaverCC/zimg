@@ -154,11 +154,13 @@ int new_img(const char *buff, const size_t len, const char *save_name) {
 
     if ((fd = open(save_name, O_WRONLY | O_TRUNC | O_CREAT, 00644)) < 0) {
         LOG_PRINT(LOG_DEBUG, "fd(%s) open failed!", save_name);
+        fprintf(stderr, "%d %s", errno, strerror(errno));
         goto done;
     }
 
     if (flock(fd, LOCK_EX | LOCK_NB) == -1) {
-        LOG_PRINT(LOG_DEBUG, "This fd is Locked by Other thread.");
+        LOG_PRINT(LOG_DEBUG, "This fd is Locked by Other thread. ignore");
+        result = 1;
         goto done;
     }
 
